@@ -1,0 +1,223 @@
+Automatic Number Conversion System
+
+Program Documentation & Project Documentation
+
+Technology: Flutter (Dart)
+Target Platforms: Android & iOS
+
+Program Documentation
+
+1. Introduction
+This program converts numbers between various numeral systems automatically (e.g., Decimal ↔ Binary ↔ Octal ↔ Hexadecimal). The system is built using Flutter to ensure cross-platform compatibility.
+
+2. Program Structure
+- main.dart (number_system.dart): Entry point of the application and contains UI + logic.
+- ui/: Contains user interface screens.
+- widgets/: Custom reusable widgets.
+- services/conversion_service.dart: Contains logic for number conversions.
+- models/: Defines number input and output structures.
+
+3. Key Functions
+convertToBinary, convertToOctal, convertToHexadecimal, convertFromBinary, convertFromOctal, convertFromHexadecimal.
+Main conversion logic is implemented in _convertNumber().
+
+4. User Interface Flow
+1. User inputs a number.
+2. Selects the base to convert from.
+3. Selects the base to convert to.
+4. Presses 'Convert' button.
+5. Result is displayed on screen.
+
+5. Main Code File (number_system.dart)
+
+dart
+import 'package:flutter/material.dart';
+
+void main() => runApp(ConverterApp());
+
+class ConverterApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Number System Converter',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: ConverterHome(),
+);
+}
+}
+
+class ConverterHome extends StatefulWidget {
+  @override
+  _ConverterHomeState createState() => _ConverterHomeState();
+}
+
+class _ConverterHomeState extends State<ConverterHome> {
+  final TextEditingController _inputController = TextEditingController();
+  String _fromSystem = 'Decimal';
+  String _toSystem = 'Binary';
+  String _result = '';
+
+  final List<String> systems = ['Decimal', 'Binary', 'Hexadecimal', 'Octal'];
+
+  void _convert() {
+    String input = _inputController.text.trim();
+    if (input.isEmpty) {
+      setState(() => _result = 'Please enter a number');
+      return;
+}
+
+    try {
+      int decimalValue = _toDecimal(input, _fromSystem);
+      String converted = _fromDecimal(decimalValue, _toSystem);
+      setState(() => _result = converted);
+} catch (e) {
+      setState(() => _result = 'Invalid input for $_fromSystem');
+}
+}
+
+  int _toDecimal(String value, String fromSystem) {
+    switch (fromSystem) {
+      case 'Binary':
+        return int.parse(value, radix: 2);
+      case 'Hexadecimal':
+        return int.parse(value, radix: 16);
+      case 'Octal':
+        return int.parse(value, radix: 8);
+      default:
+        return int.parse(value);
+}
+}
+
+  String _fromDecimal(int value, String toSystem) {
+    switch (toSystem) {
+      case 'Binary':
+        return value.toRadixString(2);
+      case 'Hexadecimal':
+        return value.toRadixString(16).toUpperCase();
+      case 'Octal':
+        return value.toRadixString(8);
+      default:
+        return value.toString();
+}
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Number System Converter')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _inputController,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                labelText: 'Enter number',
+                border: OutlineInputBorder(),
+),
+),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(child: _buildDropdown('From', _fromSystem, (val) => setState(() => _fromSystem = val))),
+                SizedBox(width: 16),
+                Expanded(child: _buildDropdown('To', _toSystem, (val) => setState(() => _toSystem = val))),
+              ],
+),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _convert,
+              child: Text('Convert'),
+),
+            SizedBox(height: 16),
+            Text(
+              'Result: $_result',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+),
+          ],
+),
+),
+);
+}
+
+  Widget _buildDropdown(String label, String currentValue, ValueChanged<String> onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label),
+        DropdownButton<String>(
+          value: currentValue,
+          isExpanded: true,
+          items: systems.map((system) {
+            return DropdownMenuItem(value: system, child: Text(system));
+}).toList(),
+          onChanged: onChanged,
+),
+      ],
+);
+}
+
+6. Error Handling
+Invalid input for the selected base is caught with try-catch. Error messages are displayed in the UI.
+
+7. Testing
+Unit tests validate conversion methods. UI testing validates inputs and dropdowns.
+
+8. Deployment
+Deployed on Android (APK/AAB) and iOS (IPA). Requires Flutter SDK 3.0+, Dart 2.18+.
+
+---
+
+Project Documentation
+
+1. Project Overview
+The Automatic Number Conversion System assists students, developers, and engineers in converting numbers across numeral systems. It eliminates manual calculations by providing instant and accurate conversions.
+
+2. Objectives
+- Build a cross-platform mobile app for number conversion.
+- Support Decimal, Binary, Octal, and Hexadecimal.
+- Provide a user-friendly and interactive UI.
+
+3. Scope
+Includes input validation, real-time conversion, copy-to-clipboard, and responsive UI.
+
+4. Functional Requirements
+- FR1: Accept user input in any numeral system.
+- FR2: Automatically convert to all other numeral systems.
+- FR3: Display results clearly.
+- FR4: Handle invalid input gracefully.
+
+5. Non-Functional Requirements
+Performance, usability, compatibility (Android 8+, iOS 13+), reliability.
+
+6. System Architecture
+Frontend: Flutter Widgets (Material UI)
+Backend: Dart logic in number_system.dart
+Data Layer: Stateless
+
+7. Tools & Technologies
+Flutter 3.0+, Dart 2.18+, Android Studio / VS Code, Git & GitHub
+
+8. Code Reference
+The main file is number_system.dart (see Program Documentation).
+
+9. Project Deliverables
+Fully functional Flutter app (APK & IPA), source code, documentation, test reports.
+
+10. Future Enhancements
+Roman numerals, dark mode, web support, voice input.
+
+11. Conclusion
+The system simplifies number conversions, improving learning efficiency and ensuring accessibility via Flutter’s cross-platform support.
+
+---
+
+Group Members
+Joseph Bahati                  CT100/G/22076/24
+Peter Caleb Kyama         CT100/G/22455/24
+Mugo Benson Kimari      CT100/G/21523/24
+Dennis Mwangi Kiman   CT100/G/21611/24
+Njama Hellen                   CT100/G/22196/24
+---
+
